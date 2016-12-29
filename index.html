@@ -3,10 +3,46 @@
 <title> jQuery Chatbox</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
 </script>
-<script>
+<script type="text/javascript">
+
+var username="";
+
+function send_message(message){
+
+	var prevState=$("#container").html();
+
+	console.log(prevState.length);
+
+	if(prevState.length > 3){
+		prevState = prevState+"<br>";
+		}
+
+	$("#container").html(prevState +"<span class ='original_message'>"+"<span class='bot'>Chatbot: </span>" + message +"</span>");
+	$(".original_message").hide();
+	$(".original_message").delay(600).fadeIn();
+	$(".original_message").removeClass("original_message");
+}
+
+function get_username(){
+	send_message("Hello My name is Smart-ChatBot. What is your name? ");
+}
+function ai(message){
+	if(username.length<3){
+		username=message;
+		send_message("Nice to meet you "+username+" !! How are you doing ?");
+	}
+
+	if(message.toLowerCase().indexOf("how are you")>=0){
+		send_message("Thanks,I am good!");
+	}
+
+}
+
 $(document).ready(function(){
 
-		$("#textbox").keypress(function(event){
+	get_username();
+
+	$("#textbox").keypress(function(event){
 			//13 means user pressed Enter Key.13 is Ascii code
 			if(event.which==13) {
 				if( $("#enter").prop("checked")){
@@ -19,10 +55,30 @@ $(document).ready(function(){
 
 		//clicking on Send button
 		$("#send").click(function(){
+			var userName="<span class='username'>You:</span>";
+			var userMessage= $("#textbox").val();
+		
 			$("#textbox").val("");
+
+			var prevState=$("#container").html();
+
+			console.log(prevState.length);
+
+			if(prevState.length > 6){
+				prevState=prevState+"<br>";
+			}
+
+	
+			$("#container").html(prevState+userName+ userMessage);
+
+			$("#container").scrollTop($("#container").prop("scrollHeight"));
+
+			ai(userMessage);
+
 		});
 
 	});
+
 </script>
 <style type="text/css">
 body{
@@ -44,11 +100,12 @@ body{
 }
 #container{
 	width:1024px;
-	min-height: 450px;
+	height: 450px;
 	margin:0px auto;
 	margin-top: 12px;
 	background-color: white;
 	border:1px solid #333;
+	overflow: scroll;
 }
 #controls{
 	width:1024px;
@@ -66,13 +123,25 @@ textarea{
 	margin-top: 10px;
 	position: absolute;
 }
+.username{
+	font-size: 18px;
+	color:blue;
+	font-weight: bold;
+
+}
+.bot{
+	font-size: 18px;
+	color:green;
+	font-style: bold;
+
+}
 </style>
 </head>
 
 <body>
 
 <div id="header">
-   <h1> Chatbox </h1>
+   <h1> Chatbox - Talk with Smart-Chatbot </h1>
 </div>
 <div id="container">
 </div>
@@ -81,7 +150,7 @@ textarea{
 <textarea id="textbox" placeholder="Enter your message here.."></textarea>
 <button id="send">Send</button>
 <br>
-<input type="checkbox" id="enter"/>
+<input type="checkbox" checked="" id="enter"/>
 <label>Send on Enter</label>
 </div>
 
